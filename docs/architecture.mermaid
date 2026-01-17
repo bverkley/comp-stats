@@ -1,0 +1,46 @@
+%% System Legacy Capture - Architecture
+%% This diagram shows the data flow and component relationships for capturing
+%% comprehensive system information before decommissioning a machine.
+
+flowchart TB
+    subgraph inputs [System Data Sources]
+        proc["/proc filesystem"]
+        sys["/sys filesystem"]
+        commands["System Commands"]
+        config["Config Files"]
+    end
+
+    subgraph capture [Capture Script]
+        main["capture-system.sh"]
+        
+        subgraph collectors [Data Collectors]
+            core["Core System\nuname, hostnamectl, uptime"]
+            cpu["CPU Info\ncpuinfo, lscpu"]
+            mem["Memory Info\nmeminfo, free, dmidecode"]
+            storage["Storage Info\nlsblk, df, hdparm, smartctl"]
+            pci["PCI/USB\nlspci, lsusb"]
+            bios["BIOS/Board\ndmidecode"]
+            gpu["Graphics\nnvidia-smi"]
+            net["Network\nip addr, ip route"]
+            sensors["Sensors\nsensors"]
+            kernel["Kernel\nlsmod, cmdline"]
+            gentoo["Gentoo\nemerge --info, packages"]
+        end
+        
+        reporter["Report Generator"]
+    end
+
+    subgraph outputs [Output Directory]
+        rawdir["raw/\nRaw command outputs"]
+        report["hostname-report-date.txt\nHuman-readable report"]
+    end
+
+    proc --> collectors
+    sys --> collectors
+    commands --> collectors
+    config --> collectors
+
+    main --> collectors
+    collectors --> rawdir
+    collectors --> reporter
+    reporter --> report
