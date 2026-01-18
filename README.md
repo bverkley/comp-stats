@@ -54,8 +54,8 @@ All Gentoo-specific data is organized in a `raw/gentoo/` subfolder:
 ## Installation
 
 ```bash
-git clone https://github.com/bverkley/system-legacy-capture.git
-cd system-legacy-capture
+git clone https://github.com/bverkley/comp-stats.git
+cd comp-stats
 chmod +x capture-system.sh
 ```
 
